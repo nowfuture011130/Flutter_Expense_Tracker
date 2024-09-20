@@ -6,18 +6,14 @@ from PIL import Image
 
 app = Flask(__name__)
 
-# 加载已知人脸图片并编码
-
 
 def load_known_face():
-    # 这里需要你提供存储的已知人脸图片路径
     known_image_path = 'me.jpeg'
     known_image = face_recognition.load_image_file(known_image_path)
     known_face_encoding = face_recognition.face_encodings(known_image)[0]
     return known_face_encoding
 
 
-# 存储已知人脸编码
 known_face_encoding = load_known_face()
 
 
@@ -31,17 +27,14 @@ def recognize_face():
         return jsonify({'matched': False, 'message': 'No selected file'}), 400
 
     try:
-        # 读取上传的图片
         image = Image.open(io.BytesIO(file.read()))
         image = np.array(image)
 
-        # 查找图片中的人脸编码
         uploaded_face_encodings = face_recognition.face_encodings(image)
 
         if not uploaded_face_encodings:
             return jsonify({'matched': False, 'message': 'No faces found in the image'}), 400
 
-        # 进行人脸比对
         uploaded_face_encoding = uploaded_face_encodings[0]
         results = face_recognition.compare_faces(
             [known_face_encoding], uploaded_face_encoding)

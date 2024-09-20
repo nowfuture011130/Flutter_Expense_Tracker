@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart'; // 导入图片选择库
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/features/dashboard/ui/dashboard_page.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,6 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> {
   bool _isLoading = false;
   String _result = "";
 
-  // 选择照片
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -43,7 +42,6 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> {
     }
   }
 
-  // 上传照片并与后端通信
   Future<void> _uploadImage() async {
     if (_image == null) return;
 
@@ -51,14 +49,12 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> {
       _isLoading = true;
     });
 
-    // 构建请求体
     final request = http.MultipartRequest(
       'POST',
       Uri.parse('http://localhost:5000/recognize'),
     );
     request.files.add(await http.MultipartFile.fromPath('file', _image!.path));
 
-    // 发送请求并接收响应
     final response = await request.send();
 
     if (response.statusCode == 200) {
@@ -71,13 +67,11 @@ class _FaceRecognitionPageState extends State<FaceRecognitionPage> {
       });
 
       if (jsonResponse['matched']) {
-        // 跳转到 DashboardPage
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DashboardPage()),
         );
       } else {
-        // 显示不匹配的消息
         _showErrorMessage();
       }
     } else {

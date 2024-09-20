@@ -27,7 +27,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   late EthPrivateKey _creds;
   int balance = 0;
 
-  // Functions
   late DeployedContract _deployedContract;
   late ContractFunction _deposit;
   late ContractFunction _withdraw;
@@ -51,7 +50,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         },
       );
 
-      // getABI
       String abiFile = await rootBundle
           .loadString('build/contracts/ExpenseManagerContract.json');
       var jsonDecoded = jsonDecode(abiFile);
@@ -64,7 +62,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       _creds = EthPrivateKey.fromHex(privateKey);
 
-      // get deployed contract
       _deployedContract = DeployedContract(_abiCode, _contractAddress);
       _deposit = _deployedContract.function("deposit");
       _withdraw = _deployedContract.function("withdraw");
